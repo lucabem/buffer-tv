@@ -1,0 +1,26 @@
+{
+  "name": "buffertv",
+  "version": "3.0.0",
+  "description": "Reproductor IPTV de escritorio con buffer retrasado para absorber pausas del servidor",
+  "private": true,
+  "main": "dist/main/main.js",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "start": "npm run build && electron .",
+    "dev": "npm run build && electron ."
+  },
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/sax": "^1.2.7",
+    "electron": "^36.0.0",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.6.0",
+    "vitest": "^3.0.0"
+  },
+  "dependencies": {
+    "sax": "^1.4.1"
+  }
+}

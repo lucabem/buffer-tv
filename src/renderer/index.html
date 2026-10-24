@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+  />
+  <title>BufferTV</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <header class="brand drag">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div>
+          <div class="brand-name">BufferTV</div>
+          <div class="brand-sub">Reproducción con buffer</div>
+        </div>
+      </header>
+
+      <div class="sidebar-head">
+        <span class="eyebrow">Servidores</span>
+        <button id="add-server" class="icon-btn" title="Añadir servidor" aria-label="Añadir servidor">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+        </button>
+      </div>
+
+      <nav id="server-list" class="server-list" aria-label="Servidores"></nav>
+
+      <div class="sidebar-foot">
+        <button id="direct-url" class="btn btn-ghost btn-block">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1" /></svg>
+          URL directa
+        </button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="hero">
+        <div class="hero-text drag">
+          <p id="hero-eyebrow" class="eyebrow">Sin servidor seleccionado</p>
+          <h1 id="hero-title">Elige un servidor</h1>
+          <p id="hero-sub" class="hero-sub"></p>
+        </div>
+        <div class="hero-controls no-drag">
+          <button id="log-toggle" class="icon-btn log-toggle" title="Registro" aria-label="Mostrar registro">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7h11M8 12h11M8 17h7" /><circle cx="4.5" cy="7" r="0.8" /><circle cx="4.5" cy="12" r="0.8" /><circle cx="4.5" cy="17" r="0.8" /></svg>
+          </button>
+        <div class="segmented" role="tablist" aria-label="Sección">
+          <span id="seg-thumb" class="seg-thumb" aria-hidden="true"></span>
+          <button id="tab-live" class="seg is-active" role="tab" aria-selected="true">En vivo</button>
+          <button id="tab-vod" class="seg" role="tab" aria-selected="false">Películas y series</button>
+        </div>
+        </div>
+      </header>
+
+      <div id="banner" class="banner hidden" role="alert"></div>
+      <div id="loading-banner" class="banner is-info hidden" role="status"></div>
+
+      <section id="panel-live" class="panel" role="tabpanel">
+        <div class="toolbar">
+          <button id="load-live" class="btn btn-primary" disabled>Cargar canales</button>
+          <div id="chips" class="chips" role="group" aria-label="Filtros"></div>
+          <label class="search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" /><path d="m20 20-4.2-4.2" /></svg>
+            <input id="search" type="search" placeholder="Buscar canal" autocomplete="off" spellcheck="false" />
+            <kbd>/</kbd>
+          </label>
+        </div>
+        <div id="grid" class="grid" aria-live="polite"></div>
+      </section>
+
+      <section id="panel-vod" class="panel hidden" role="tabpanel">
+        <div class="toolbar">
+          <button id="load-vod" class="btn btn-primary" disabled>Cargar catálogo</button>
+          <label class="search search-wide">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" /><path d="m20 20-4.2-4.2" /></svg>
+            <input id="vod-search" type="search" placeholder="Buscar película o serie (mínimo 3 letras)" autocomplete="off" spellcheck="false" />
+          </label>
+        </div>
+        <div id="vod-list" class="vod-list"></div>
+        <div class="vod-bar">
+          <span id="vod-selected" class="muted">Ningún título seleccionado</span>
+          <button id="vod-play" class="btn btn-primary" disabled>Reproducir sin buffer</button>
+        </div>
+      </section>
+
+      <footer class="dock">
+        <div id="dock-progress" class="dock-progress" aria-hidden="true"><span id="dock-fill"></span></div>
+        <div class="now">
+          <div id="now-art" class="now-art" aria-hidden="true"></div>
+          <div class="now-text">
+            <div id="now-title" class="now-title">Ningún canal seleccionado</div>
+            <div id="now-meta" class="now-meta">Elige un canal para reproducirlo</div>
+          </div>
+        </div>
+        <div class="dock-controls">
+          <label class="stepper" title="Retraso en segundos">
+            <span>Retraso</span>
+            <input id="delay" inputmode="numeric" autocomplete="off" />
+            <small>s</small>
+          </label>
+          <label class="stepper" title="Tamaño máximo del buffer">
+            <span>Buffer</span>
+            <input id="buffer" inputmode="numeric" autocomplete="off" />
+            <small>MB</small>
+          </label>
+          <button id="epg" class="btn btn-ghost" disabled>Programación</button>
+          <button id="stop" class="btn btn-ghost btn-danger" disabled>Detener</button>
+          <button id="play" class="play-btn" disabled aria-label="Reproducir">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z" /></svg>
+          </button>
+        </div>
+        <div id="dock-stats" class="stats"></div>
+      </footer>
+    </main>
+  </div>
+
+  <aside id="log-panel" class="log-panel" aria-label="Registro de actividad">
+    <header class="log-head">
+      <div>
+        <p class="eyebrow">Actividad</p>
+        <h2>Registro</h2>
+      </div>
+      <div class="log-actions">
+        <button id="log-copy" class="icon-btn" title="Copiar registro" aria-label="Copiar registro">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8.5" y="8.5" width="11" height="11" rx="2.5" /><path d="M5.5 15.5V6.5a1.5 1.5 0 0 1 1.5-1.5h9" /></svg>
+        </button>
+        <button id="log-close" class="icon-btn" title="Cerrar (Esc)" aria-label="Cerrar registro">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+        </button>
+      </div>
+    </header>
+    <p id="log-empty" class="log-empty">Sin actividad todavía.</p>
+    <ol id="log-list" class="log-list" aria-live="polite"></ol>
+  </aside>
+
+  <div id="toasts" class="toast-stack" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

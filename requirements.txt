@@ -1,0 +1,29 @@
+# BufferTV: requirements
+#
+# This is an Electron + TypeScript app. Its npm dependencies are declared in
+# package.json and installed with `npm install` (done by ./install.sh).
+# This file lists the system tools and runtimes the app needs, so they can be
+# checked or installed by hand. It is not read by pip.
+#
+# System requirements
+# -------------------
+# Node.js            >= 20        (tested with 26.4.0)
+# ffmpeg             (tested with 9.0.2; minimum version not verified); must include ffprobe and ffplay
+#
+# Install ffmpeg:
+#   macOS:          brew install ffmpeg
+#   Debian/Ubuntu:  sudo apt install ffmpeg
+#   Fedora:         sudo dnf install ffmpeg   (may require RPM Fusion)
+#   Arch:           sudo pacman -S ffmpeg
+#
+# Platforms
+# ---------
+# macOS (tested), Linux (not yet tested)
+#
+# npm dependencies (see package.json)
+# -----------------------------------
+# electron        ^36.0.0   (devDependency)
+# esbuild         ^0.25.0   (devDependency)
+# typescript      ^5.6.0    (devDependency)
+# vitest          ^3.0.0    (devDependency)
+# sax             ^1.4.1    (runtime dependency)
